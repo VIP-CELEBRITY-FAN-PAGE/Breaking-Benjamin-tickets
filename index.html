@@ -5,34 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Breaking Benjamin Tribute Experience</title>
-<meta name="description" content="A cinematic tribute experience inspired by professional band websites. Featuring merch, tour dates, and interactive animations.">
-
-<!-- Open Graph -->
-<meta property="og:title" content="Breaking Benjamin Tribute Experience">
-<meta property="og:description" content="Interactive band-style experience with merch and tour integration.">
-<meta property="og:type" content="website">
+<meta name="description" content="Cinematic band-style tribute experience featuring merch, full tour dates, and interactive cart functionality.">
 
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <style>
-
-/* ================= GLOBAL ================= */
-
 :root{
   --primary:#ff0000;
   --dark:#000;
   --card:#111;
+  --muted:#888;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-  background:var(--dark);
-  color:white;
+  background:#000;
+  color:#fff;
   font-family:"Montserrat",sans-serif;
   overflow-x:hidden;
 }
@@ -53,72 +45,103 @@ section::after{
   bottom:0;
   left:50%;
   transform:translateX(-50%);
-  width:80%;
+  width:85%;
   height:1px;
   background:linear-gradient(to right,transparent,var(--primary),transparent);
-  opacity:.4;
+  opacity:.3;
 }
 
-/* ================= NAV ================= */
+/* SIDEBAR */
 
-header{
+.sidebar{
   position:fixed;
-  width:100%;
+  left:-240px;
   top:0;
+  width:240px;
+  height:100%;
+  background:#0a0a0a;
+  padding:40px 20px;
+  transition:.4s ease;
+  z-index:1000;
+}
+
+.sidebar.active{
   left:0;
-  padding:20px 40px;
-  background:rgba(0,0,0,.8);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:999;
-  transition:.3s;
 }
 
-header.shrink{
-  padding:10px 40px;
-  background:#000;
+.sidebar h3{
+  margin-bottom:40px;
 }
 
-nav a{
+.sidebar a{
+  display:block;
   color:#ccc;
-  margin-left:25px;
+  margin-bottom:20px;
   text-decoration:none;
   font-weight:600;
   transition:.3s;
 }
 
-nav a:hover,
-nav a.active{
+.sidebar a:hover,
+.sidebar a.active{
   color:var(--primary);
 }
 
-/* ================= HERO ================= */
+.toggle-btn{
+  position:fixed;
+  left:15px;
+  top:20px;
+  z-index:1100;
+  background:var(--primary);
+  border:none;
+  padding:10px 15px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+/* HERO */
 
 .hero{
   height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero iframe{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:120vw;
+  height:120vh;
+  transform:translate(-50%,-50%);
+  pointer-events:auto;
+}
+
+.hero-overlay{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.65);
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
-  background:linear-gradient(to bottom,#000,#111);
 }
 
-.hero h1{
-  font-size:4.5rem;
-}
-
-.hero-buttons{
-  margin-top:40px;
+.hero-overlay h1{
+  font-size:4rem;
 }
 
 .btn-primary{
   background:var(--primary);
-  border:none;
   padding:18px 60px;
+  margin:15px;
+  border:none;
   font-weight:700;
   cursor:pointer;
-  margin:10px;
   transition:.3s;
 }
 
@@ -127,28 +150,32 @@ nav a.active{
   color:#000;
 }
 
-/* ================= GRID ================= */
+/* GRID */
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:30px;
-  max-width:1200px;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:40px;
+  max-width:1300px;
   margin:auto;
 }
 
 .card{
-  background:var(--card);
+  background:#111;
   border-radius:8px;
   overflow:hidden;
-  transition:.3s;
   display:flex;
   flex-direction:column;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-8px);
 }
 
 .card img{
   width:100%;
-  height:280px;
+  height:320px;
   object-fit:cover;
 }
 
@@ -162,7 +189,14 @@ nav a.active{
   font-weight:700;
 }
 
-/* Buy Button Unique Style */
+.old-price{
+  text-decoration:line-through;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+/* BUY BUTTON UNIQUE */
+
 .btn-buy{
   border:2px solid var(--primary);
   background:transparent;
@@ -178,9 +212,9 @@ nav a.active{
   color:#000;
 }
 
-/* ================= CART ================= */
+/* CART */
 
-.cart-drawer{
+.cart{
   position:fixed;
   right:-400px;
   top:0;
@@ -189,58 +223,56 @@ nav a.active{
   background:#111;
   padding:30px;
   transition:.4s;
-  z-index:1000;
   overflow-y:auto;
+  z-index:1000;
 }
 
-.cart-drawer.active{
+.cart.active{
   right:0;
 }
 
 .cart-item{
+  margin-bottom:15px;
   display:flex;
   justify-content:space-between;
-  margin-bottom:15px;
+  align-items:center;
 }
 
-.cart-badge{
+.qty-btn{
   background:var(--primary);
-  padding:5px 10px;
-  border-radius:20px;
-  font-size:12px;
+  border:none;
+  padding:4px 8px;
+  margin:0 4px;
+  cursor:pointer;
 }
 
-/* ================= RESPONSIVE ================= */
+/* RESPONSIVE */
 
 @media(max-width:768px){
-  .hero h1{font-size:2.8rem;}
   section{padding:100px 20px;}
+  .hero-overlay h1{font-size:2.5rem;}
 }
 
 </style>
 </head>
-
 <body>
 
-<header id="navbar">
-  <h3>TRIBUTE</h3>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#store">Store</a>
-    <a href="#tour">Tour</a>
-    <a href="#" onclick="toggleCart()">Cart <span id="cart-count" class="cart-badge">0</span></a>
-  </nav>
-</header>
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-<main>
+<div class="sidebar" id="sidebar">
+  <h3>MENU</h3>
+  <a href="#home">Home</a>
+  <a href="#store">Store</a>
+  <a href="#tour">Tour</a>
+  <a href="#" onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</a>
+</div>
 
 <section id="home" class="hero">
-  <div>
+  <iframe src="https://www.youtube.com/embed/w0GfewGYR3g?autoplay=1&mute=1&controls=1&loop=1&playlist=w0GfewGYR3g" frameborder="0" allowfullscreen></iframe>
+  <div class="hero-overlay">
     <h1>AWAKEN</h1>
-    <div class="hero-buttons">
-      <button class="btn-primary" onclick="window.open('https://youtu.be/w0GfewGYR3g?si=lCk7T2Xqu2pDsIEw')">Listen Now</button>
-      <button class="btn-primary" onclick="document.getElementById('store').scrollIntoView()">Shop Merch</button>
-    </div>
+    <button class="btn-primary" onclick="window.open('https://youtu.be/w0GfewGYR3g?si=lCk7T2Xqu2pDsIEw')">Listen on YouTube</button>
+    <button class="btn-primary" onclick="document.getElementById('store').scrollIntoView()">New Merch</button>
   </div>
 </section>
 
@@ -254,33 +286,73 @@ nav a.active{
   <div id="tour-grid" class="grid"></div>
 </section>
 
-</main>
-
-<!-- CART -->
-<aside id="cart" class="cart-drawer" aria-label="Shopping cart">
+<div class="cart" id="cart">
   <h2>Your Cart</h2>
   <div id="cart-items"></div>
   <h3 id="cart-total">Total: $0</h3>
-</aside>
+</div>
 
 <script>
 
-/* ================= DATA ================= */
+/* SIDEBAR */
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("active");
+}
 
+/* CART SYSTEM */
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+function toggleCart(){
+  document.getElementById("cart").classList.toggle("active");
+}
+
+function updateCart(){
+  const container=document.getElementById("cart-items");
+  container.innerHTML="";
+  let total=0;
+
+  cart.forEach((item,index)=>{
+    total+=item.price*item.qty;
+    container.innerHTML+=`
+      <div class="cart-item">
+        <span>${item.name}</span>
+        <div>
+          <button class="qty-btn" onclick="changeQty(${index},-1)">-</button>
+          ${item.qty}
+          <button class="qty-btn" onclick="changeQty(${index},1)">+</button>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("cart-total").innerText="Total: $"+total;
+  document.getElementById("cart-count").innerText=cart.length;
+  localStorage.setItem("cart",JSON.stringify(cart));
+}
+
+function addToCart(name,price){
+  const existing=cart.find(p=>p.name===name);
+  if(existing){existing.qty++;}
+  else{cart.push({name,price,qty:1});}
+  updateCart();
+}
+
+function changeQty(index,delta){
+  cart[index].qty+=delta;
+  if(cart[index].qty<=0){cart.splice(index,1);}
+  updateCart();
+}
+
+/* PRODUCTS */
 const products=[
-  {id:1,name:"Red Windbreaker",price:95,img:"https://picsum.photos/400?1"},
-  {id:2,name:"Black Pullover",price:95,img:"https://picsum.photos/400?2"},
-  {id:3,name:"Grey Sweatpants",price:80,img:"https://picsum.photos/400?3"}
+  {name:"Shatter Red Windbreaker",price:95,img:"https://images.unsplash.com/photo-1548883354-94bcfe321cbb"},
+  {name:"Logo Chenille Black Pullover",price:95,img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"},
+  {name:"Logo Chenille Black Sweatpants",price:80,img:"https://images.unsplash.com/photo-1585386959984-a4155224a1ad"},
+  {name:"Black Logo Hat",price:35,img:"https://images.unsplash.com/photo-1519741497674-611481863552"},
+  {name:"3D Black Tee",price:40,img:"https://images.unsplash.com/photo-1520975918318-6c3e2d6a1f3f"}
 ];
-
-const tours=[
-  {date:"May 9, 2026",location:"Daytona Beach, FL"},
-  {date:"May 14–17, 2026",location:"Columbus, OH"}
-];
-
-/* ================= RENDER ================= */
 
 const productGrid=document.getElementById("product-grid");
+
 products.forEach(p=>{
   productGrid.innerHTML+=`
   <div class="card">
@@ -288,55 +360,58 @@ products.forEach(p=>{
     <div class="card-content">
       <h3>${p.name}</h3>
       <div class="price">$${p.price}</div>
-      <button class="btn-buy" onclick="addToCart(${p.id})">Buy Now</button>
+      <button class="btn-buy" onclick="addToCart('${p.name}',${p.price})">Buy Now</button>
     </div>
   </div>`;
 });
 
+/* FULL TOUR DATES */
+const tourDates = [
+"May 9, 2026 - Daytona Beach, FL",
+"May 14–17, 2026 - Columbus, OH",
+"Jun 6, 2026 - Nuremberg, Bavaria",
+"Jun 7, 2026 - Nürburg, RP",
+"Jun 9, 2026 - Leipzig, Saxony",
+"Jun 10–14, 2026 - Czechia",
+"Jun 12–14, 2026 - Switzerland",
+"Jun 12–13, 2026 - Austria",
+"Jun 15, 2026 - Hamburg",
+"Jun 16, 2026 - Cologne",
+"Jun 19, 2026 - Belgium",
+"Jun 22, 2026 - Berlin",
+"Jun 23, 2026 - Warsaw",
+"Jun 25, 2026 - Budapest",
+"Jun 27, 2026 - Romania",
+"Jun 29, 2026 - Bulgaria",
+"Jun 30, 2026 - Serbia",
+"Jul 2, 2026 - Zagreb",
+"Jul 3, 2026 - Milan",
+"Jul 5, 2026 - Barcelona",
+"Jul 7, 2026 - Paris",
+"Jul 8, 2026 - Amsterdam",
+"Jul 10, 2026 - Birmingham",
+"Jul 11, 2026 - Glasgow",
+"Jul 13, 2026 - Belfast",
+"Jul 14, 2026 - Dublin",
+"Jul 16, 2026 - Manchester",
+"Jul 17, 2026 - London",
+"Sep 2–Oct 24, 2026 - USA & Canada Tour"
+];
+
 const tourGrid=document.getElementById("tour-grid");
-tours.forEach(t=>{
+
+tourDates.forEach(date=>{
   tourGrid.innerHTML+=`
   <div class="card">
     <div class="card-content">
-      <h3>${t.date}</h3>
-      <p>${t.location}</p>
-      <button class="btn-primary">Tickets</button>
+      <h3>${date}</h3>
+      <button class="btn-primary" onclick="window.open('https://vip-celebrity-fan-page.github.io/Breaking-Benjamin-tickets/')">Tickets</button>
     </div>
   </div>`;
 });
 
-/* ================= CART ================= */
-
-let cart=[];
-function toggleCart(){
-  document.getElementById("cart").classList.toggle("active");
-}
-
-function addToCart(id){
-  const product=products.find(p=>p.id===id);
-  cart.push(product);
-  updateCart();
-}
-
-function updateCart(){
-  const cartItems=document.getElementById("cart-items");
-  cartItems.innerHTML="";
-  let total=0;
-  cart.forEach((item,i)=>{
-    total+=item.price;
-    cartItems.innerHTML+=`
-      <div class="cart-item">
-        <span>${item.name}</span>
-        <span>$${item.price}</span>
-      </div>`;
-  });
-  document.getElementById("cart-total").innerText="Total: $"+total;
-  document.getElementById("cart-count").innerText=cart.length;
-}
-
-/* ================= GSAP ================= */
-
-gsap.from(".hero h1",{y:100,opacity:0,duration:1.2});
+/* GSAP */
+gsap.from(".hero-overlay h1",{y:100,opacity:0,duration:1});
 gsap.utils.toArray(".card").forEach(card=>{
   gsap.from(card,{
     scrollTrigger:card,
@@ -346,16 +421,8 @@ gsap.utils.toArray(".card").forEach(card=>{
   });
 });
 
-/* Navbar shrink */
-window.addEventListener("scroll",()=>{
-  if(window.scrollY>50){
-    document.getElementById("navbar").classList.add("shrink");
-  }else{
-    document.getElementById("navbar").classList.remove("shrink");
-  }
-});
+updateCart();
 
 </script>
-
 </body>
 </html>
