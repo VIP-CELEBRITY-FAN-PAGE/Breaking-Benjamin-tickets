@@ -3,39 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Breaking Benjamin Official </title>
+
+<title>Breaking Benjamin Tribute Experience</title>
+<meta name="description" content="A cinematic tribute experience inspired by professional band websites. Featuring merch, tour dates, and interactive animations.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Breaking Benjamin Tribute Experience">
+<meta property="og:description" content="Interactive band-style experience with merch and tour integration.">
+<meta property="og:type" content="website">
 
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
 <style>
 
-/* =====================
-   GLOBAL
-===================== */
+/* ================= GLOBAL ================= */
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+:root{
+  --primary:#ff0000;
+  --dark:#000;
+  --card:#111;
 }
 
+*{margin:0;padding:0;box-sizing:border-box;}
+
 body{
-  background:#000;
-  color:#fff;
+  background:var(--dark);
+  color:white;
   font-family:"Montserrat",sans-serif;
   overflow-x:hidden;
 }
 
-html{
-  scroll-behavior:smooth;
+h1,h2,h3{
+  font-family:"Oswald",sans-serif;
+  letter-spacing:3px;
 }
 
 section{
+  padding:120px 40px;
   position:relative;
-  padding:140px 40px;
 }
 
-/* Elegant Divider Line Between Sections */
 section::after{
   content:"";
   position:absolute;
@@ -44,133 +55,90 @@ section::after{
   transform:translateX(-50%);
   width:80%;
   height:1px;
-  background:linear-gradient(to right,transparent,#ff0000,transparent);
-  opacity:.5;
+  background:linear-gradient(to right,transparent,var(--primary),transparent);
+  opacity:.4;
 }
 
-/* =====================
-   SIDEBAR
-===================== */
+/* ================= NAV ================= */
 
-.navbar{
+header{
   position:fixed;
-  left:0;
-  top:0;
-  height:100%;
-  width:70px;
-  background:rgba(0,0,0,.95);
-  backdrop-filter:blur(6px);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding-top:40px;
-  transition:width .4s ease;
-  z-index:999;
-}
-
-.navbar:hover,
-.navbar.active{
-  width:220px;
-}
-
-.logo{
-  font-family:"Oswald",sans-serif;
-  letter-spacing:4px;
-  writing-mode:vertical-rl;
-  transform:rotate(180deg);
-  margin-bottom:60px;
-}
-
-.nav-links{
-  display:flex;
-  flex-direction:column;
-  gap:25px;
   width:100%;
-  padding:0 10px;
-}
-
-.nav-links a{
-  color:#ccc;
-  font-weight:600;
-  padding:12px;
-  border-radius:6px;
+  top:0;
+  left:0;
+  padding:20px 40px;
+  background:rgba(0,0,0,.8);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:999;
   transition:.3s;
 }
 
-.nav-links a:hover,
-.nav-links a.active-link{
-  background:#ff0000;
-  color:#000;
+header.shrink{
+  padding:10px 40px;
+  background:#000;
 }
 
-/* =====================
-   HERO
-===================== */
+nav a{
+  color:#ccc;
+  margin-left:25px;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+
+nav a:hover,
+nav a.active{
+  color:var(--primary);
+}
+
+/* ================= HERO ================= */
 
 .hero{
   height:100vh;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   text-align:center;
   background:linear-gradient(to bottom,#000,#111);
 }
 
 .hero h1{
-  font-family:"Oswald",sans-serif;
-  font-size:5rem;
-  letter-spacing:10px;
-  margin-bottom:30px;
+  font-size:4.5rem;
 }
 
-.hero p{
-  font-size:1.3rem;
-  margin-bottom:40px;
-  opacity:.8;
+.hero-buttons{
+  margin-top:40px;
 }
 
-/* BIG RED PRIMARY BUTTONS */
 .btn-primary{
-  padding:22px 70px;
-  font-size:1.1rem;
-  font-weight:700;
+  background:var(--primary);
   border:none;
-  border-radius:6px;
-  background:#ff0000;
-  color:#fff;
+  padding:18px 60px;
+  font-weight:700;
   cursor:pointer;
-  transition:.3s;
   margin:10px;
+  transition:.3s;
 }
 
 .btn-primary:hover{
   background:#fff;
   color:#000;
-  transform:scale(1.05);
 }
 
-/* =====================
-   STORE GRID
-===================== */
+/* ================= GRID ================= */
 
-.section-title{
-  font-family:"Oswald",sans-serif;
-  font-size:3rem;
-  letter-spacing:6px;
-  text-align:center;
-  margin-bottom:70px;
-}
-
-.merch-grid{
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:40px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:30px;
   max-width:1200px;
   margin:auto;
 }
 
-.merch-card{
-  background:#111;
+.card{
+  background:var(--card);
   border-radius:8px;
   overflow:hidden;
   transition:.3s;
@@ -178,97 +146,75 @@ section::after{
   flex-direction:column;
 }
 
-.merch-card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 20px 40px rgba(255,0,0,.15);
-}
-
-.merch-card img{
+.card img{
   width:100%;
-  height:320px;
+  height:280px;
   object-fit:cover;
-  display:block;
 }
 
-.merch-content{
+.card-content{
   padding:20px;
   text-align:center;
 }
 
 .price{
-  font-weight:700;
   margin:10px 0;
+  font-weight:700;
 }
 
-/* UNIQUE BUY BUTTON STYLE */
+/* Buy Button Unique Style */
 .btn-buy{
-  padding:14px 20px;
-  border:2px solid #ff0000;
+  border:2px solid var(--primary);
   background:transparent;
-  color:#ff0000;
-  font-weight:700;
+  color:var(--primary);
+  padding:12px;
   cursor:pointer;
+  font-weight:700;
   transition:.3s;
-  border-radius:4px;
 }
 
 .btn-buy:hover{
-  background:#ff0000;
+  background:var(--primary);
   color:#000;
 }
 
-/* =====================
-   TOUR
-===================== */
+/* ================= CART ================= */
 
-.tour-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:30px;
-  max-width:1000px;
-  margin:auto;
-}
-
-.tour-card{
+.cart-drawer{
+  position:fixed;
+  right:-400px;
+  top:0;
+  width:350px;
+  height:100%;
   background:#111;
   padding:30px;
-  border-radius:8px;
-  transition:.3s;
+  transition:.4s;
+  z-index:1000;
+  overflow-y:auto;
 }
 
-.tour-card:hover{
-  transform:translateY(-5px);
+.cart-drawer.active{
+  right:0;
 }
 
-.tour-card p{
-  margin-bottom:20px;
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:15px;
 }
 
-/* =====================
-   RESPONSIVE
-===================== */
+.cart-badge{
+  background:var(--primary);
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+/* ================= RESPONSIVE ================= */
 
 @media(max-width:768px){
-  .navbar{
-    flex-direction:row;
-    height:auto;
-    width:100%;
-    padding:10px;
-  }
-
-  .logo{
-    writing-mode:horizontal-tb;
-    transform:none;
-    margin:0;
-  }
-
-  .hero h1{
-    font-size:2.8rem;
-  }
-
-  section{
-    padding:100px 20px;
-  }
+  .hero h1{font-size:2.8rem;}
+  section{padding:100px 20px;}
 }
 
 </style>
@@ -276,96 +222,140 @@ section::after{
 
 <body>
 
-<nav class="navbar" id="sidebar">
-  <div class="logo">Breaking Benjamin</div>
-  <div class="nav-links">
+<header id="navbar">
+  <h3>TRIBUTE</h3>
+  <nav>
     <a href="#home">Home</a>
     <a href="#store">Store</a>
     <a href="#tour">Tour</a>
-  </div>
-</nav>
+    <a href="#" onclick="toggleCart()">Cart <span id="cart-count" class="cart-badge">0</span></a>
+  </nav>
+</header>
 
-<!-- HERO -->
+<main>
+
 <section id="home" class="hero">
   <div>
     <h1>AWAKEN</h1>
-    <p>Experience the energy. Feel the darkness.</p>
-    <button class="btn-primary" onclick="document.getElementById('store').scrollIntoView()">Shop Merch</button>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="window.open('https://youtu.be/w0GfewGYR3g?si=lCk7T2Xqu2pDsIEw')">Listen Now</button>
+      <button class="btn-primary" onclick="document.getElementById('store').scrollIntoView()">Shop Merch</button>
+    </div>
   </div>
 </section>
 
-<!-- STORE -->
 <section id="store">
-  <h2 class="section-title">Breaking Benjamin Official Fan Store</h2>
-
-  <div class="merch-grid">
-
-    <div class="merch-card">
-      <img src="https://images.unsplash.com/photo-1520975918318-6c3e2d6a1f3f" alt="Red Windbreaker">
-      <div class="merch-content">
-        <h3>Shatter Red Windbreaker</h3>
-        <div class="price">$95.00</div>
-        <button class="btn-buy">Buy Now</button>
-      </div>
-    </div>
-
-    <div class="merch-card">
-      <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad" alt="Black Pullover">
-      <div class="merch-content">
-        <h3>Logo Black Pullover</h3>
-        <div class="price">$95.00</div>
-        <button class="btn-buy">Buy Now</button>
-      </div>
-    </div>
-
-    <div class="merch-card">
-      <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" alt="Grey Sweatpants">
-      <div class="merch-content">
-        <h3>Phantom Grey Sweatpants</h3>
-        <div class="price">$80.00</div>
-        <button class="btn-buy">Buy Now</button>
-      </div>
-    </div>
-
-  </div>
+  <h2 style="text-align:center;margin-bottom:60px;">Official Store</h2>
+  <div id="product-grid" class="grid"></div>
 </section>
 
-<!-- TOUR -->
 <section id="tour">
-  <h2 class="section-title">Tour Dates</h2>
-
-  <div class="tour-grid">
-    <div class="tour-card">
-      <p>May 9, 2026<br>Daytona Beach, FL</p>
-      <button class="btn-primary">Get Tickets</button>
-    </div>
-
-    <div class="tour-card">
-      <p>May 14–17, 2026<br>Columbus, OH</p>
-      <button class="btn-primary">Get Tickets</button>
-    </div>
-  </div>
+  <h2 style="text-align:center;margin-bottom:60px;">Tour Dates</h2>
+  <div id="tour-grid" class="grid"></div>
 </section>
+
+</main>
+
+<!-- CART -->
+<aside id="cart" class="cart-drawer" aria-label="Shopping cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <h3 id="cart-total">Total: $0</h3>
+</aside>
 
 <script>
 
-/* Sidebar Toggle for Touch */
-document.getElementById("sidebar").addEventListener("click",function(){
-  this.classList.toggle("active");
+/* ================= DATA ================= */
+
+const products=[
+  {id:1,name:"Red Windbreaker",price:95,img:"https://picsum.photos/400?1"},
+  {id:2,name:"Black Pullover",price:95,img:"https://picsum.photos/400?2"},
+  {id:3,name:"Grey Sweatpants",price:80,img:"https://picsum.photos/400?3"}
+];
+
+const tours=[
+  {date:"May 9, 2026",location:"Daytona Beach, FL"},
+  {date:"May 14–17, 2026",location:"Columbus, OH"}
+];
+
+/* ================= RENDER ================= */
+
+const productGrid=document.getElementById("product-grid");
+products.forEach(p=>{
+  productGrid.innerHTML+=`
+  <div class="card">
+    <img src="${p.img}" alt="${p.name}">
+    <div class="card-content">
+      <h3>${p.name}</h3>
+      <div class="price">$${p.price}</div>
+      <button class="btn-buy" onclick="addToCart(${p.id})">Buy Now</button>
+    </div>
+  </div>`;
 });
 
-/* Active Link Highlight */
-const links=document.querySelectorAll(".nav-links a");
-const sections=document.querySelectorAll("section");
+const tourGrid=document.getElementById("tour-grid");
+tours.forEach(t=>{
+  tourGrid.innerHTML+=`
+  <div class="card">
+    <div class="card-content">
+      <h3>${t.date}</h3>
+      <p>${t.location}</p>
+      <button class="btn-primary">Tickets</button>
+    </div>
+  </div>`;
+});
 
-window.addEventListener("scroll",()=>{
-  let current="";
-  sections.forEach(sec=>{
-    const top=sec.offsetTop-150;
-    if(scrollY>=top){
-      current=sec.getAttribute("id");
-    }
+/* ================= CART ================= */
+
+let cart=[];
+function toggleCart(){
+  document.getElementById("cart").classList.toggle("active");
+}
+
+function addToCart(id){
+  const product=products.find(p=>p.id===id);
+  cart.push(product);
+  updateCart();
+}
+
+function updateCart(){
+  const cartItems=document.getElementById("cart-items");
+  cartItems.innerHTML="";
+  let total=0;
+  cart.forEach((item,i)=>{
+    total+=item.price;
+    cartItems.innerHTML+=`
+      <div class="cart-item">
+        <span>${item.name}</span>
+        <span>$${item.price}</span>
+      </div>`;
   });
+  document.getElementById("cart-total").innerText="Total: $"+total;
+  document.getElementById("cart-count").innerText=cart.length;
+}
 
-  links.forEach(link=>{
-    link.classList
+/* ================= GSAP ================= */
+
+gsap.from(".hero h1",{y:100,opacity:0,duration:1.2});
+gsap.utils.toArray(".card").forEach(card=>{
+  gsap.from(card,{
+    scrollTrigger:card,
+    y:50,
+    opacity:0,
+    duration:.8
+  });
+});
+
+/* Navbar shrink */
+window.addEventListener("scroll",()=>{
+  if(window.scrollY>50){
+    document.getElementById("navbar").classList.add("shrink");
+  }else{
+    document.getElementById("navbar").classList.remove("shrink");
+  }
+});
+
+</script>
+
+</body>
+</html>
